@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [ :show, :edit, :update, :destroy, :generate_facilitator ]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy, :generate_facilitator, :send_reset_password_instructions ]
 
   def index
     return redirect_to authenticated_root_path unless current_user.super_user?
@@ -97,6 +97,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def send_reset_password_instructions
+    @user.send_reset_password_instructions
+    redirect_to users_path, notice: "Reset password instructions sent to #{@user.email}."
+  end
   private
 
   def set_user
