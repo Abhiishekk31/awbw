@@ -1,0 +1,13 @@
+<% title ||= "Featured Workshops" %>
+
+<section class="mt-6 py-10 <%= DomainTheme.bg_class_for(:workshops) %>">
+  <div class="max-w-6xl mx-auto px-4">
+    <%= render "dashboard/dashboard_section_header",
+               title: title,
+               subtitle: "Spotlights from our curriculum" %>
+
+    <%= turbo_frame_tag "dashboard_workshops", src: root_path do %>
+      <%= render "workshops_cards_skeleton" %>
+    <% end %>
+  </div>
+</section>

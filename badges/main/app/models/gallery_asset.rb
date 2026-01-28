@@ -1,0 +1,2 @@
+class GalleryAsset < Asset
+end
