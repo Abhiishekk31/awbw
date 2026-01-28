@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_27_171722) do
   create_table "action_text_mentions", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "action_text_rich_text_id", null: false
     t.datetime "created_at", null: false
@@ -213,14 +213,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
   end
 
   create_table "categories", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.integer "category_type_id"
     t.datetime "created_at", precision: nil, null: false
     t.integer "legacy_id"
-    t.integer "metadatum_id"
     t.string "name"
-    t.integer "position", default: 10, null: false
+    t.integer "position", null: false
     t.boolean "published", default: false
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["metadatum_id"], name: "index_categories_on_metadatum_id"
+    t.index ["category_type_id", "position"], name: "index_categories_on_category_type_id_and_position", unique: true
+    t.index ["category_type_id"], name: "index_categories_on_category_type_id"
   end
 
   create_table "categorizable_items", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -234,6 +235,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.index ["categorizable_type", "categorizable_id"], name: "idx_on_categorizable_type_categorizable_id_ccce65d80c"
     t.index ["category_id", "categorizable_type", "categorizable_id"], name: "index_categorizable_items_uniqueness", unique: true
     t.index ["category_id"], name: "index_categorizable_items_on_category_id"
+  end
+
+  create_table "category_types", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.datetime "created_at", precision: nil, null: false
+    t.string "legacy_id"
+    t.string "name"
+    t.boolean "published", default: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "ckeditor_assets", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -264,6 +273,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "updated_by_id", null: false
+    t.boolean "visitor_featured", default: false, null: false
     t.integer "windows_type_id"
     t.string "youtube_url"
     t.index ["author_id"], name: "index_community_news_on_author_id"
@@ -311,6 +321,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.datetime "start_date", precision: nil
     t.string "title"
     t.datetime "updated_at", null: false
+    t.boolean "visitor_featured", default: false, null: false
     t.index ["created_by_id"], name: "index_events_on_created_by_id"
   end
 
@@ -448,14 +459,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.datetime "file_updated_at", precision: nil
     t.integer "report_id"
     t.integer "workshop_log_id"
-  end
-
-  create_table "metadata", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, null: false
-    t.string "legacy_id"
-    t.string "name"
-    t.boolean "published", default: false
-    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "monthly_reports", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -665,6 +668,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "url"
     t.integer "user_id"
+    t.boolean "visitor_featured", default: false, null: false
     t.integer "windows_type_id"
     t.integer "workshop_id"
     t.index ["user_id"], name: "index_resources_on_user_id"
@@ -706,6 +710,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "updated_by_id", null: false
+    t.boolean "visitor_featured", default: false, null: false
     t.string "website_url"
     t.integer "windows_type_id", null: false
     t.integer "workshop_id"
@@ -1052,6 +1057,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
     t.string "title"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
+    t.boolean "visitor_featured", default: false, null: false
     t.text "visualization", size: :long
     t.text "visualization_spanish", size: :long
     t.text "warm_up", size: :long
@@ -1079,7 +1085,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_20_212705) do
   add_foreign_key "banners", "users", column: "updated_by_id"
   add_foreign_key "bookmark_annotations", "bookmarks"
   add_foreign_key "bookmarks", "users"
-  add_foreign_key "categories", "metadata"
+  add_foreign_key "categories", "category_types"
   add_foreign_key "community_news", "projects"
   add_foreign_key "community_news", "users", column: "author_id"
   add_foreign_key "community_news", "users", column: "created_by_id"
