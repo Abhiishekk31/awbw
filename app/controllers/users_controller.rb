@@ -101,6 +101,7 @@ class UsersController < ApplicationController
     @user.send_reset_password_instructions
     redirect_to users_path, notice: "Reset password instructions sent to #{@user.email}."
   end
+
   def toggle_lock_status
     return redirect_to users_path, alert: "You don't have permission to perform this action." unless current_user.super_user?
 
