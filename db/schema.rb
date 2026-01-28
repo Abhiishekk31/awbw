@@ -220,13 +220,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_27_171722) do
     t.integer "position", null: false
     t.boolean "published", default: false
     t.datetime "updated_at", precision: nil, null: false
-<<<<<<< HEAD
-    t.index ["metadatum_id", "position"], name: "index_categories_on_metadatum_id_and_position", unique: true
-    t.index ["metadatum_id"], name: "index_categories_on_metadatum_id"
-=======
     t.index ["category_type_id", "position"], name: "index_categories_on_category_type_id_and_position", unique: true
     t.index ["category_type_id"], name: "index_categories_on_category_type_id"
->>>>>>> 3a5b1077 (Revert schema, env sample, and lockfile from upstream main)
   end
 
   create_table "categorizable_items", id: :integer, charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
