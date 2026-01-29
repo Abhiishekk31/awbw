@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [ :show, :edit, :update, :destroy, :generate_facilitator, :toggle_lock_status ]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy, :generate_facilitator, :toggle_lock_status, :send_reset_password_instructions ]
 
   def index
     return redirect_to root_path unless current_user.super_user?
